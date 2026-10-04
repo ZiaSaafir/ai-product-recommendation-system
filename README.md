@@ -1,143 +1,153 @@
-AI Product Recommendation System
-A full-stack, AI-powered product recommendation platform built with Django REST Framework and React. The system learns from user interactions — views, clicks, likes, cart actions, and purchases — and delivers personalized recommendations using content similarity and weighted interaction signals.
+# AI Product Recommendation System
 
-Project Status
-Current Milestone: V2.1 — Content-Based Recommendation System
+A full-stack, AI-powered product recommendation platform built with **Django REST Framework** and **React**. The system learns from user interactions — views, clicks, likes, cart actions, and purchases — and delivers personalized recommendations using content similarity and weighted interaction signals.
 
-Implemented Features
-User registration and authentication
+---
 
-JWT-based authentication
+## Table of Contents
 
-Product catalog REST API
+- [Project Status](#project-status)
+- [Tech Stack](#tech-stack)
+- [Recommendation System](#recommendation-system)
+- [How It Works](#how-it-works)
+- [API Reference](#api-reference)
+- [Project Structure](#project-structure)
+- [Recommendation Roadmap](#recommendation-roadmap)
+- [Seed Product Data](#seed-product-data)
+- [Running the Backend](#running-the-backend)
+- [Running the Frontend](#running-the-frontend)
+- [Current Achievement](#current-achievement)
+- [Future Improvements](#future-improvements)
+- [Purpose](#purpose)
+- [License](#license)
 
-Product detail page
+---
 
-User interaction tracking
+## Project Status
 
-Interaction weighting system
+**Current Milestone:** V2.1 — Content-Based Recommendation System
 
-TF-IDF text vectorization
+### Implemented Features
 
-Cosine similarity engine
+- User registration and authentication
+- JWT-based authentication
+- Product catalog REST API
+- Product detail page
+- User interaction tracking
+- Interaction weighting system
+- TF-IDF text vectorization
+- Cosine similarity engine
+- Personalized product recommendations
+- Normalized recommendation scores (0–100)
+- React frontend with Vite
+- PostgreSQL database
+- Realistic seeded catalog with 23 products
 
-Personalized product recommendations
+---
 
-Normalized recommendation scores (0–100)
+## Tech Stack
 
-React frontend with Vite
+### Backend
 
-PostgreSQL database
+| Technology | Purpose |
+| --- | --- |
+| Python | Core language |
+| Django | Web framework |
+| Django REST Framework | REST API |
+| Simple JWT | Authentication |
+| PostgreSQL | Database |
+| scikit-learn | TF-IDF and similarity |
 
-Realistic seeded catalog with 23 products
+### Frontend
 
-Tech Stack
-Backend
-Technology	Purpose
-Python	Core language
-Django	Web framework
-Django REST Framework	REST API
-Simple JWT	Authentication
-PostgreSQL	Database
-scikit-learn	ML / TF-IDF / Similarity
-Frontend
-Technology	Purpose
-React	UI Library
-Vite	Build tool
-JavaScript	Language
-CSS	Styling
-Recommendation System
+| Technology | Purpose |
+| --- | --- |
+| React | UI library |
+| Vite | Build tool |
+| JavaScript | Language |
+| CSS | Styling |
+
+---
+
+## Recommendation System
+
 The recommendation engine uses a content-based filtering approach.
 
-Product Text Features
-Each product is converted to a text blob containing:
+Each product is represented by a text blob containing its name, description, category, and brand. This text is vectorized using TF-IDF, and cosine similarity is used to compare products the user has already interacted with against all other products.
 
-Product name
+Recommendation scores are then weighted by how strongly the user interacted with each product, and normalized to a 0–100 scale.
 
-Description
+### Interaction Weights
 
-Category
+| Interaction | Weight |
+| --- | :---: |
+| VIEW | 1 |
+| CLICK | 2 |
+| LIKE | 3 |
+| CART | 4 |
+| PURCHASE | 5 |
 
-Brand
+---
 
-TF-IDF + Cosine Similarity
-All product text is vectorized using TF-IDF (Term Frequency–Inverse Document Frequency).
+## How It Works
+User Interaction
+|
+v
+Interaction History
+|
+v
+Interaction Weight
+|
+v
+Product Text (Name + Description + Category + Brand)
+|
+v
+TF-IDF Vectorization
+|
+v
+Cosine Similarity
+|
+v
+Weighted Recommendation Score
+|
+v
+Personalized Recommendations
 
-Cosine similarity is computed between interacted products and candidate products.
-
-Scores are weighted by interaction strength.
-
-Results are normalized to a 0–100 scale.
-
-Interaction Weights
-Interaction	Weight	Meaning
-VIEW	1	Weakest signal
-CLICK	2	Mild interest
-LIKE	3	Clear interest
-CART	4	Strong interest
-PURCHASE	5	Strongest signal
-These weights multiply the cosine similarity score to produce a personalized recommendation score.
-
-How It Works
 text
-       ┌────────────────────┐
-       │  User Interaction  │
-       └─────────┬──────────┘
-                 ▼
-       ┌────────────────────┐
-       │ Interaction History│
-       └─────────┬──────────┘
-                 ▼
-       ┌────────────────────┐
-       │ Interaction Weight │
-       └─────────┬──────────┘
-                 ▼
-       ┌────────────────────────────────┐
-       │ Product Text                   │
-       │ (Name + Desc + Category + Brand)│
-       └─────────┬──────────────────────┘
-                 ▼
-       ┌────────────────────┐
-       │ TF-IDF Vectorize   │
-       └─────────┬──────────┘
-                 ▼
-       ┌────────────────────┐
-       │ Cosine Similarity  │
-       └─────────┬──────────┘
-                 ▼
-       ┌────────────────────┐
-       │ Weighted Score     │
-       └─────────┬──────────┘
-                 ▼
-       ┌────────────────────────┐
-       │ Personalized Recomms.  │
-       └────────────────────────┘
-API Reference
-Authentication
+
+---
+
+## API Reference
+
+### Authentication
+
 JWT-based authentication is used for protected endpoints.
 
-Products
-http
+### Products
 GET /api/products/
 GET /api/products/<id>/
-Interactions
-Authenticated users can record:
-VIEW · CLICK · LIKE · CART · PURCHASE
 
-http
-GET  /api/interactions/
+text
+
+### Interactions
+
+Authenticated users can record: `VIEW`, `CLICK`, `LIKE`, `CART`, `PURCHASE`.
+GET /api/interactions/
 POST /api/interactions/
-Example Request:
 
-json
+text
+
+Example request:
+
+```json
 {
     "product": 22,
     "interaction_type": "LIKE"
 }
 Recommendations
-http
+text
 GET /api/recommendations/
-Example Response:
+Example response:
 
 json
 {
@@ -155,113 +165,83 @@ json
 Project Structure
 text
 ai_product_recommendation/
-│
 ├── backend/
 │   ├── apps/
-│   │   ├── accounts/         # Auth, JWT, user management
-│   │   ├── products/         # Product catalog
-│   │   ├── interactions/     # User interaction tracking
-│   │   └── recommendations/  # Recommendation engine
-│   │
+│   │   ├── accounts/
+│   │   ├── products/
+│   │   ├── interactions/
+│   │   └── recommendations/
 │   ├── seed_products.py
 │   ├── manage.py
 │   └── ...
-│
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/
 │   │   │   ├── Home.jsx
 │   │   │   ├── Login.jsx
 │   │   │   └── Register.jsx
-│   │   │
 │   │   ├── css/
 │   │   ├── services/
 │   │   │   └── api.js
 │   │   └── App.jsx
-│   │
 │   └── ...
-│
 └── README.md
 Recommendation Roadmap
 text
-V1   Category-Based Recommendation
-        ↓
-V2   Content-Based Recommendation
-        ↓
-     TF-IDF + Cosine Similarity
-        ↓
-V2.1 Interaction Weighting + Score Normalization   ←  Current
-        ↓
-V2.2 Recommendation Explanations
-        ↓
-V3   Collaborative Filtering
-        ↓
-     KNN
-        ↓
-V4   Hybrid Recommendation System
-        ↓
-V5   Evaluation + Recommendation Metrics
-        ↓
-V6   Production Optimization
+V1    Category-Based Recommendation
+        |
+        v
+V2    Content-Based Recommendation
+      TF-IDF + Cosine Similarity
+        |
+        v
+V2.1  Interaction Weighting + Score Normalization    <- Current
+        |
+        v
+V2.2  Recommendation Explanations
+        |
+        v
+V3    Collaborative Filtering (KNN)
+        |
+        v
+V4    Hybrid Recommendation System
+        |
+        v
+V5    Evaluation + Recommendation Metrics
+        |
+        v
+V6    Production Optimization
 Seed Product Data
-The project ships with 23 realistic products across categories such as:
+The project currently includes 23 realistic products across categories such as laptops, smartphones, monitors, gaming, accessories, headphones, and smartwatches.
 
-Laptops
+Brands include Apple, Samsung, Sony, Logitech, ASUS, Dell, and HP.
 
-Smartphones
+The seed script is located at backend/seed_products.py.
 
-Monitors
-
-Gaming
-
-Headphones
-
-Smartwatches
-
-Accessories
-
-Brands include: Apple, Samsung, Sony, Logitech, ASUS, Dell, HP
-
-Location: backend/seed_products.py
-
-Run (PowerShell):
+On Windows PowerShell, run:
 
 powershell
 Get-Content seed_products.py | python manage.py shell
 Running the Backend
 powershell
-# Go to backend
 cd backend
-
-# Activate virtual environment
 .\venv\Scripts\Activate.ps1
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Run migrations
 python manage.py migrate
-
-# Start server
 python manage.py runserver
-Backend runs at: http://127.0.0.1:8000/
+Backend runs at http://127.0.0.1:8000/.
 
 Running the Frontend
 powershell
-# Go to frontend
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start dev server
 npm run dev
-Frontend runs at: http://localhost:5173/
+Frontend runs at http://localhost:5173/.
 
 Current Achievement
-The system has been tested with multiple user accounts and produces different recommendations for each user based on their interaction history.
+The system has been tested with multiple user accounts and produces different recommendation results based on each user's interaction history.
 
-This confirms that the engine is personalized, rather than returning a static product list to every user.
+This demonstrates that the recommendation engine is personalized, rather than simply returning the same product list to every user.
 
 Future Improvements
 Recommendation explanations
@@ -291,6 +271,7 @@ This project is being developed as a practical AI and full-stack engineering pro
 
 License
 This project is currently intended for learning, experimentation, and portfolio development.
+
 
 ![alt text](image.png)
 
