@@ -1,70 +1,56 @@
 AI Product Recommendation System
-
-A full-stack AI-powered product recommendation system built with Django REST Framework and React. The project learns from user interactions such as views, clicks, likes, cart actions, and purchases, then recommends products based on content similarity and interaction strength.
+A full-stack, AI-powered product recommendation platform built with Django REST Framework and React. The system learns from user interactions — views, clicks, likes, cart actions, and purchases — and delivers personalized recommendations using content similarity and weighted interaction signals.
 
 Project Status
+Current Milestone: V2.1 — Content-Based Recommendation System
 
-Current milestone: V2.1 — Content-Based Recommendation System
-
-Implemented:
-
+Implemented Features
 User registration and authentication
 
-JWT authentication
+JWT-based authentication
 
-Product catalog API
+Product catalog REST API
 
 Product detail page
 
 User interaction tracking
 
-Interaction weighting
+Interaction weighting system
 
 TF-IDF text vectorization
 
-Cosine similarity
+Cosine similarity engine
 
 Personalized product recommendations
 
-Normalized recommendation scores
+Normalized recommendation scores (0–100)
 
-React frontend
+React frontend with Vite
 
 PostgreSQL database
 
-Realistic seeded product catalog with 23 products
+Realistic seeded catalog with 23 products
 
 Tech Stack
-
 Backend
-
-Python
-
-Django
-
-Django REST Framework
-
-Simple JWT
-
-PostgreSQL
-
-scikit-learn
-
+Technology	Purpose
+Python	Core language
+Django	Web framework
+Django REST Framework	REST API
+Simple JWT	Authentication
+PostgreSQL	Database
+scikit-learn	ML / TF-IDF / Similarity
 Frontend
-
-React
-
-Vite
-
-JavaScript
-
-CSS
-
+Technology	Purpose
+React	UI Library
+Vite	Build tool
+JavaScript	Language
+CSS	Styling
 Recommendation System
+The recommendation engine uses a content-based filtering approach.
 
-The current recommendation engine uses a content-based approach.
-
-Product information such as:
+Product Text Features
+Each product is converted to a text blob containing:
 
 Product name
 
@@ -74,103 +60,86 @@ Category
 
 Brand
 
-is converted into TF-IDF vectors.
+TF-IDF + Cosine Similarity
+All product text is vectorized using TF-IDF (Term Frequency–Inverse Document Frequency).
 
-Cosine similarity is then used to determine how similar products are to products the user has interacted with.
+Cosine similarity is computed between interacted products and candidate products.
 
-User interactions are weighted according to their strength:
+Scores are weighted by interaction strength.
 
-Interaction
+Results are normalized to a 0–100 scale.
 
-Weight
-
-VIEW
-
-1
-
-CLICK
-
-2
-
-LIKE
-
-3
-
-CART
-
-4
-
-PURCHASE
-
-5
-
-The system uses these weights when calculating personalized recommendation scores.
+Interaction Weights
+Interaction	Weight	Meaning
+VIEW	1	Weakest signal
+CLICK	2	Mild interest
+LIKE	3	Clear interest
+CART	4	Strong interest
+PURCHASE	5	Strongest signal
+These weights multiply the cosine similarity score to produce a personalized recommendation score.
 
 How It Works
-
-User Interaction
-       |
-       v
-Interaction History
-       |
-       v
-Interaction Weight
-       |
-       v
-Product Text
-(Name + Description + Category + Brand)
-       |
-       v
-TF-IDF Vectorization
-       |
-       v
-Cosine Similarity
-       |
-       v
-Weighted Recommendation Score
-       |
-       v
-Personalized Recommendations
-
-API
-
+text
+       ┌────────────────────┐
+       │  User Interaction  │
+       └─────────┬──────────┘
+                 ▼
+       ┌────────────────────┐
+       │ Interaction History│
+       └─────────┬──────────┘
+                 ▼
+       ┌────────────────────┐
+       │ Interaction Weight │
+       └─────────┬──────────┘
+                 ▼
+       ┌────────────────────────────────┐
+       │ Product Text                   │
+       │ (Name + Desc + Category + Brand)│
+       └─────────┬──────────────────────┘
+                 ▼
+       ┌────────────────────┐
+       │ TF-IDF Vectorize   │
+       └─────────┬──────────┘
+                 ▼
+       ┌────────────────────┐
+       │ Cosine Similarity  │
+       └─────────┬──────────┘
+                 ▼
+       ┌────────────────────┐
+       │ Weighted Score     │
+       └─────────┬──────────┘
+                 ▼
+       ┌────────────────────────┐
+       │ Personalized Recomms.  │
+       └────────────────────────┘
+API Reference
 Authentication
-
 JWT-based authentication is used for protected endpoints.
 
 Products
-
+http
 GET /api/products/
 GET /api/products/<id>/
-
 Interactions
-
 Authenticated users can record:
+VIEW · CLICK · LIKE · CART · PURCHASE
 
-VIEW
-CLICK
-LIKE
-CART
-PURCHASE
-
-Endpoint:
-
+http
 GET  /api/interactions/
 POST /api/interactions/
+Example Request:
 
-Example:
-
+json
 {
     "product": 22,
     "interaction_type": "LIKE"
 }
-
 Recommendations
-
+http
 GET /api/recommendations/
+Example Response:
 
-Example response:
-
+json
 {
     "count": 5,
     "results": [
@@ -183,17 +152,16 @@ Example response:
         }
     ]
 }
-
 Project Structure
-
+text
 ai_product_recommendation/
 │
 ├── backend/
 │   ├── apps/
-│   │   ├── accounts/
-│   │   ├── products/
-│   │   ├── interactions/
-│   │   └── recommendations/
+│   │   ├── accounts/         # Auth, JWT, user management
+│   │   ├── products/         # Product catalog
+│   │   ├── interactions/     # User interaction tracking
+│   │   └── recommendations/  # Recommendation engine
 │   │
 │   ├── seed_products.py
 │   ├── manage.py
@@ -214,34 +182,29 @@ ai_product_recommendation/
 │   └── ...
 │
 └── README.md
-
 Recommendation Roadmap
-
-The project is being developed progressively:
-
-V1  Category-Based Recommendation
+text
+V1   Category-Based Recommendation
         ↓
-V2  Content-Based Recommendation
+V2   Content-Based Recommendation
         ↓
      TF-IDF + Cosine Similarity
         ↓
-V2.1 Interaction Weighting + Score Normalization
+V2.1 Interaction Weighting + Score Normalization   ←  Current
         ↓
 V2.2 Recommendation Explanations
         ↓
-V3  Collaborative Filtering
+V3   Collaborative Filtering
         ↓
-    KNN
+     KNN
         ↓
-V4  Hybrid Recommendation System
+V4   Hybrid Recommendation System
         ↓
-V5  Evaluation + Recommendation Metrics
+V5   Evaluation + Recommendation Metrics
         ↓
-V6  Production Optimization
-
+V6   Production Optimization
 Seed Product Data
-
-The project currently includes 23 realistic products across categories such as:
+The project ships with 23 realistic products across categories such as:
 
 Laptops
 
@@ -251,93 +214,59 @@ Monitors
 
 Gaming
 
-Accessories
-
 Headphones
 
 Smartwatches
 
-Brands include:
+Accessories
 
-Apple
+Brands include: Apple, Samsung, Sony, Logitech, ASUS, Dell, HP
 
-Samsung
+Location: backend/seed_products.py
 
-Sony
+Run (PowerShell):
 
-Logitech
-
-ASUS
-
-Dell
-
-HP
-
-The seed script is located at:
-
-backend/seed_products.py
-
-On Windows PowerShell, it can be executed with:
-
+powershell
 Get-Content seed_products.py | python manage.py shell
-
 Running the Backend
-
-Go to the backend directory:
-
+powershell
+# Go to backend
 cd backend
 
-Activate your virtual environment:
-
+# Activate virtual environment
 .\venv\Scripts\Activate.ps1
 
-Install dependencies:
-
+# Install dependencies
 pip install -r requirements.txt
 
-Run migrations:
-
+# Run migrations
 python manage.py migrate
 
-Start the development server:
-
+# Start server
 python manage.py runserver
-
-The backend will normally run at:
-
-http://127.0.0.1:8000/
+Backend runs at: http://127.0.0.1:8000/
 
 Running the Frontend
-
-Go to the frontend directory:
-
+powershell
+# Go to frontend
 cd frontend
 
-Install dependencies:
-
+# Install dependencies
 npm install
 
-Start the development server:
-
+# Start dev server
 npm run dev
-
-The frontend will normally run at:
-
-http://localhost:5173/
+Frontend runs at: http://localhost:5173/
 
 Current Achievement
+The system has been tested with multiple user accounts and produces different recommendations for each user based on their interaction history.
 
-The system has been tested with multiple user accounts and produces different recommendation results based on each user's interaction history.
-
-This demonstrates that the recommendation engine is personalized rather than simply returning the same product list to every user.
+This confirms that the engine is personalized, rather than returning a static product list to every user.
 
 Future Improvements
-
-Planned improvements include:
-
 Recommendation explanations
 
-Better recommendation evaluation
+Better recommendation evaluation metrics
 
 Collaborative filtering
 
@@ -345,7 +274,7 @@ KNN-based recommendations
 
 Hybrid recommendation model
 
-More interaction signals
+Additional interaction signals
 
 Cold-start handling
 
@@ -358,9 +287,11 @@ Production deployment
 Larger product dataset
 
 Purpose
-
-This project is being developed as a practical AI/full-stack engineering project to understand how recommendation systems work from the ground up, starting with interpretable content-based methods and gradually moving toward more advanced recommendation techniques.
+This project is being developed as a practical AI and full-stack engineering project to understand how recommendation systems work from the ground up — starting with interpretable content-based methods and gradually moving toward more advanced recommendation techniques.
 
 License
+This project is currently intended for learning, experimentation, and portfolio development.
 
-This project is currently intended for learning, experimentation, and portfolio development
+![alt text](image.png)
+
+![alt text](image-1.png)
